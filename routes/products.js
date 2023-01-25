@@ -23,6 +23,19 @@ router.get('/products', async (req, res) => {
 })
 
 
+
+// post Product 
+router.post('/add-product', async (req, res) => {
+  try {
+    const result = await Products.insertOne(req.body)
+    res.send({ success: true, data: result })
+  } catch (error) {
+    console.log(error.name, error.message);
+    res.send({ success: false, error: error.message })
+  }
+})
+
+// Post Add To Cart
 router.post('/add-cart', async (req, res) => {
   try {
     const result = await Carts.insertOne(req.body)
@@ -32,6 +45,25 @@ router.post('/add-cart', async (req, res) => {
     res.send({ success: false, error: error.message })
   }
 })
+
+
+//Get all Buy Products for users
+router.get('/cart', async (req, res) => {
+  try {
+    const carts = await Carts.find({ userId: req.query.uid }).toArray();
+    res.send({
+      success: true,
+      data: carts
+    })
+  } catch (error) {
+    res.send({
+      success: false,
+      error: error.message
+    })
+  }
+})
+
+
 
 
 module.exports = router;
